@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { downloadBlob } from "@/lib/image/client-image";
 
 export function QrCodeTool() {
-  const [text, setText] = useState("https://lifetoolbox.com");
+  const [text, setText] = useState("https://life.hottoolsbox.com");
   const [dataUrl, setDataUrl] = useState("");
   const [error, setError] = useState("");
 

@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 
+const rawSiteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://life.hottoolsbox.com";
+
 export const siteConfig = {
   siteName: "LifeToolbox",
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://lifetoolbox.com",
+  siteUrl: rawSiteUrl.replace(/\/$/, ""),
   defaultOgImage: "/og-images/default.png",
   twitterHandle: "@lifetoolbox",
   locale: "en_US",
