@@ -1,0 +1,15 @@
+# Cloudflare Pages — static export (Next.js output: "export")
+# Docs: https://developers.cloudflare.com/pages/configuration/wrangler-configuration/
+name = "lifetoolbox"
+compatibility_date = "2024-09-23"
+pages_build_output_dir = "out"
+
+# Git-connected Pages project (Dashboard → Settings → Builds):
+#   Framework preset: None
+#   Build command:    npm run pages:build
+#   Build output dir: out  (auto-read from pages_build_output_dir)
+#   Root directory:   /
+#   Node.js version:  20  (from .node-version)
+#
+# Required environment variable (Production + Preview):
+#   NEXT_PUBLIC_SITE_URL = https://your-domain.com
