@@ -5,7 +5,7 @@ import { CURRENT_PHASE, getToolsByPhase } from "@/lib/tool-registry";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteConfig.siteUrl;
-  const staticPages = ["", "/tools", "/blog", "/about", "/privacy", "/terms"];
+  const staticPages = ["", "/tools", "/blog", "/about", "/privacy", "/terms", "/affiliate-disclosure"];
   const tools = getToolsByPhase(CURRENT_PHASE);
   const posts = getAllPosts();
 

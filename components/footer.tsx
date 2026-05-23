@@ -21,6 +21,7 @@ export function Footer() {
           <Link href="/about">About</Link>
           <Link href="/privacy">Privacy Policy</Link>
           <Link href="/terms">Terms</Link>
+          <Link href="/affiliate-disclosure">Affiliate Disclosure</Link>
           <a
             href={siteConfig.sisterSite.url}
             target="_blank"
