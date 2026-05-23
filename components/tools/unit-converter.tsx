@@ -7,14 +7,20 @@ import {
   formatNumber,
   lengthUnits,
   weightUnits,
+  areaUnits,
+  volumeUnits,
+  speedUnits,
   type UnitDef,
 } from "@/lib/formulas/units";
 
-type ConverterKind = "length" | "weight";
+type ConverterKind = "length" | "weight" | "area" | "volume" | "speed";
 
 const CONFIG: Record<ConverterKind, { title: string; units: UnitDef[] }> = {
   length: { title: "Length", units: lengthUnits },
   weight: { title: "Weight", units: weightUnits },
+  area: { title: "Area", units: areaUnits },
+  volume: { title: "Volume", units: volumeUnits },
+  speed: { title: "Speed", units: speedUnits },
 };
 
 export function UnitConverterTool({ kind }: { kind: ConverterKind }) {

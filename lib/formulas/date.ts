@@ -1,8 +1,10 @@
 import {
   differenceInDays,
   differenceInMonths,
+  eachDayOfInterval,
   intervalToDuration,
   isBefore,
+  isWeekend,
   parseISO,
   isValid,
   addYears,
@@ -48,6 +50,20 @@ export function calcDaysBetween(startStr: string, endStr: string) {
   const weeks = Math.floor(Math.abs(days) / 7);
   const months = Math.abs(differenceInMonths(end, start));
   return { ok: true as const, days, weeks, months };
+}
+
+export function calcWorkdaysBetween(startStr: string, endStr: string) {
+  const start = parseISO(startStr);
+  const end = parseISO(endStr);
+  if (!isValid(start) || !isValid(end)) {
+    return { ok: false as const, error: "Invalid date" };
+  }
+  const [from, to] = isBefore(start, end) ? [start, end] : [end, start];
+  const days = eachDayOfInterval({ start: from, end: to });
+  const workdays = days.filter((d) => !isWeekend(d)).length;
+  const totalDays = days.length;
+  const weekends = totalDays - workdays;
+  return { ok: true as const, workdays, totalDays, weekends };
 }
 
 export function calcCountdown(targetStr: string, today = new Date()) {

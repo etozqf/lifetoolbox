@@ -25,6 +25,36 @@ export const weightUnits: UnitDef[] = [
   { key: "st", label: "Stones (st)", toBase: (v) => v * 6.35029, fromBase: (v) => v / 6.35029 },
 ];
 
+export const areaUnits: UnitDef[] = [
+  { key: "mm2", label: "Square mm (mm²)", toBase: (v) => v / 1e6, fromBase: (v) => v * 1e6 },
+  { key: "cm2", label: "Square cm (cm²)", toBase: (v) => v / 1e4, fromBase: (v) => v * 1e4 },
+  { key: "m2", label: "Square meters (m²)", toBase: (v) => v, fromBase: (v) => v },
+  { key: "km2", label: "Square km (km²)", toBase: (v) => v * 1e6, fromBase: (v) => v / 1e6 },
+  { key: "in2", label: "Square inches (in²)", toBase: (v) => v * 0.00064516, fromBase: (v) => v / 0.00064516 },
+  { key: "ft2", label: "Square feet (ft²)", toBase: (v) => v * 0.092903, fromBase: (v) => v / 0.092903 },
+  { key: "acre", label: "Acres", toBase: (v) => v * 4046.86, fromBase: (v) => v / 4046.86 },
+  { key: "ha", label: "Hectares (ha)", toBase: (v) => v * 10000, fromBase: (v) => v / 10000 },
+];
+
+export const volumeUnits: UnitDef[] = [
+  { key: "ml", label: "Milliliters (ml)", toBase: (v) => v / 1000, fromBase: (v) => v * 1000 },
+  { key: "l", label: "Liters (L)", toBase: (v) => v, fromBase: (v) => v },
+  { key: "floz", label: "Fluid ounces (US fl oz)", toBase: (v) => v * 0.0295735, fromBase: (v) => v / 0.0295735 },
+  { key: "cup", label: "US Cups", toBase: (v) => v * 0.236588, fromBase: (v) => v / 0.236588 },
+  { key: "pint", label: "US Pints", toBase: (v) => v * 0.473176, fromBase: (v) => v / 0.473176 },
+  { key: "quart", label: "US Quarts", toBase: (v) => v * 0.946353, fromBase: (v) => v / 0.946353 },
+  { key: "gal", label: "US Gallons", toBase: (v) => v * 3.78541, fromBase: (v) => v / 3.78541 },
+  { key: "m3", label: "Cubic meters (m³)", toBase: (v) => v * 1000, fromBase: (v) => v / 1000 },
+];
+
+export const speedUnits: UnitDef[] = [
+  { key: "mps", label: "Meters per second (m/s)", toBase: (v) => v, fromBase: (v) => v },
+  { key: "kph", label: "Kilometers per hour (km/h)", toBase: (v) => v / 3.6, fromBase: (v) => v * 3.6 },
+  { key: "mph", label: "Miles per hour (mph)", toBase: (v) => v * 0.44704, fromBase: (v) => v / 0.44704 },
+  { key: "knot", label: "Knots", toBase: (v) => v * 0.514444, fromBase: (v) => v / 0.514444 },
+  { key: "fps", label: "Feet per second (ft/s)", toBase: (v) => v * 0.3048, fromBase: (v) => v / 0.3048 },
+];
+
 export function convertFromBase(units: UnitDef[], baseValue: number): Record<string, number> {
   const out: Record<string, number> = {};
   for (const u of units) {
