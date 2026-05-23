@@ -1,10 +1,11 @@
 import { ReactNode } from "react";
 import { AdBanner } from "./ad-banner";
+import { AffiliateSlot } from "./affiliate-slot";
 import { DisclaimerBanner } from "./disclaimer-banner";
 import { RelatedTools } from "./related-tools";
 import { JsonLd } from "./json-ld";
 import { siteConfig, webApplicationJsonLd } from "@/lib/seo";
-import type { DisclaimerType } from "@/lib/tool-registry";
+import type { DisclaimerType, ToolCluster } from "@/lib/tool-registry";
 
 export function ToolPageShell({
   title,
@@ -13,6 +14,7 @@ export function ToolPageShell({
   related,
   disclaimer,
   privacyNote,
+  cluster,
   children,
 }: {
   title: string;
@@ -21,6 +23,7 @@ export function ToolPageShell({
   related: string[];
   disclaimer?: DisclaimerType;
   privacyNote?: string;
+  cluster?: ToolCluster;
   children: ReactNode;
 }) {
   const url = `${siteConfig.siteUrl}${path}`;
@@ -36,6 +39,7 @@ export function ToolPageShell({
       {disclaimer && <DisclaimerBanner type={disclaimer} />}
       <AdBanner slot="tool-top" />
       <div className="mx-auto mt-8 max-w-tool">{children}</div>
+      {cluster && <AffiliateSlot cluster={cluster} />}
       <AdBanner slot="tool-bottom" />
       <RelatedTools slugs={related} />
     </div>

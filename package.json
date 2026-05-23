@@ -11,7 +11,8 @@
     "pages:build": "CF_PAGES=1 next build",
     "pages:deploy": "npm run pages:build && wrangler pages deploy out",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "og:generate": "node scripts/generate-og-images.mjs"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
@@ -38,6 +39,7 @@
     "eslint": "^8.57.1",
     "eslint-config-next": "^14.2.18",
     "postcss": "^8.4.49",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.4.15",
     "typescript": "^5.6.3",
     "wrangler": "^3.114.17"

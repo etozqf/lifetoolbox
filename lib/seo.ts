@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { getOgImageForCluster } from "@/lib/og-images";
+import type { ToolCluster } from "@/lib/tool-registry";
 
 const rawSiteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://life.hottoolsbox.com";
@@ -22,8 +24,11 @@ export function buildToolMetadata(opts: {
   description: string;
   path: string;
   keywords: string[];
+  cluster?: ToolCluster;
 }): Metadata {
   const url = `${siteConfig.siteUrl}${opts.path}`;
+  const ogImage = getOgImageForCluster(opts.cluster);
+  const imageUrl = `${siteConfig.siteUrl}${ogImage}`;
   return {
     title: `${opts.title} | ${siteConfig.siteName}`,
     description: opts.description,
@@ -34,12 +39,14 @@ export function buildToolMetadata(opts: {
       url,
       type: "website",
       siteName: siteConfig.siteName,
+      images: [{ url: imageUrl, width: 1200, height: 630, alt: opts.title }],
     },
     alternates: { canonical: url },
     twitter: {
       card: "summary_large_image",
       title: opts.title,
       description: opts.description,
+      images: [imageUrl],
     },
   };
 }

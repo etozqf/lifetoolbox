@@ -20,6 +20,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ```bash
 npm run pages:build
+npm run og:generate   # regenerate cluster OG images (1200×630 PNG)
 ```
 
 Output is in `out/`.
