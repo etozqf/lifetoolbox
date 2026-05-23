@@ -10,11 +10,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build:
+    name: Build static site
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      deployments: write
     steps:
       - uses: actions/checkout@v4
 
@@ -26,13 +24,33 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build static site
+      - name: Build
         run: npm run pages:build
         env:
           NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'https://life.hottoolsbox.com' }}
           NEXT_PUBLIC_GA_MEASUREMENT_ID: ${{ vars.NEXT_PUBLIC_GA_MEASUREMENT_ID }}
 
-      - name: Deploy to Cloudflare Pages
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pages-out
+          path: out
+          retention-days: 1
+
+  deploy:
+    name: Deploy to Cloudflare
+    needs: build
+    runs-on: ubuntu-latest
+    # Skip deploy when secrets are not configured (Cloudflare Git integration handles deploy instead)
+    if: ${{ vars.ENABLE_ACTIONS_DEPLOY == 'true' }}
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: pages-out
+          path: out
+
+      - name: Deploy with Wrangler
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
