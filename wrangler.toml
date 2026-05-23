@@ -11,5 +11,8 @@ pages_build_output_dir = "out"
 #   Root directory:   /
 #   Node.js version:  20  (from .node-version)
 #
-# Required environment variable (Production + Preview):
+# Required environment variables (Production + Preview):
 #   NEXT_PUBLIC_SITE_URL = https://life.hottoolsbox.com
+#   NEXT_PUBLIC_RATES_API_URL = /api/rates
+#
+# Pages Functions (functions/api/rates.ts) deploy automatically with Git builds.

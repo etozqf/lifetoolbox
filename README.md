@@ -89,7 +89,7 @@ npm run pages:deploy
 
 ## Current scope
 
-- **Phase 2** — 34 tools, 23 blog posts
-- Clusters: calc, health, date, convert, random, social, kitchen, image, pdf
+- **Phase 3** — 37 tools, 26 blog posts, `/api/rates` exchange proxy
+- Clusters: calc, health, date, convert, random, social, kitchen, image, pdf, **finance**
 
 See `LifeToolbox-MVP-开发规格书.md` for full roadmap.

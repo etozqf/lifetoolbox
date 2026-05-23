@@ -430,9 +430,46 @@ export const tools: ToolEntry[] = [
     related: ["merge"],
     phase: 2,
   },
+  // --- Phase 3: Finance ---
+  {
+    slug: "currency-converter",
+    cluster: "finance",
+    path: "/tools/finance/currency-converter",
+    name: "Currency Converter",
+    description: "Convert between world currencies using live exchange rates.",
+    icon: "CircleDollarSign",
+    keywords: ["currency converter", "exchange rate calculator"],
+    related: ["mortgage-calculator", "compound-interest"],
+    phase: 3,
+    disclaimer: "financial",
+  },
+  {
+    slug: "mortgage-calculator",
+    cluster: "finance",
+    path: "/tools/finance/mortgage-calculator",
+    name: "Mortgage Calculator",
+    description: "Estimate monthly mortgage payments from price, down payment, and rate.",
+    icon: "Home",
+    keywords: ["mortgage calculator", "home affordability"],
+    related: ["compound-interest", "currency-converter"],
+    phase: 3,
+    disclaimer: "financial",
+  },
+  {
+    slug: "compound-interest",
+    cluster: "finance",
+    path: "/tools/finance/compound-interest",
+    name: "Compound Interest Calculator",
+    description: "Project investment growth with compound interest and monthly contributions.",
+    icon: "TrendingUp",
+    keywords: ["compound interest calculator", "investment calculator"],
+    related: ["mortgage-calculator", "currency-converter"],
+    phase: 3,
+    disclaimer: "financial",
+  },
 ];
 
-export const CURRENT_PHASE = 2;
+export const CURRENT_PHASE = 3;
 
 export const activeClusters: ToolCluster[] = [
   "calc",
@@ -444,6 +481,7 @@ export const activeClusters: ToolCluster[] = [
   "kitchen",
   "image",
   "pdf",
+  "finance",
 ];
 
 export function getToolsByPhase(maxPhase = CURRENT_PHASE) {
