@@ -47,7 +47,7 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
     <ConsentContext.Provider value={{ consent, setConsent }}>
       {children}
       {ready && consent === null && <CookieBanner onChoice={setConsent} />}
-      {consent === "accepted" && <GoogleAnalytics />}
+      <GoogleAnalytics enabled={consent === "accepted"} />
     </ConsentContext.Provider>
   );
 }
