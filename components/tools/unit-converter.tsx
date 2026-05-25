@@ -32,22 +32,14 @@ export function UnitConverterTool({ kind }: { kind: ConverterKind }) {
   const ui = useToolUi(slug);
   const { locale } = useLocale();
   const [activeKey, setActiveKey] = useState(units[0].key);
-  const [values, setValues] = useState<Record<string, string>>({});
+  const [input, setInput] = useState("");
 
   const displayValues = useMemo(() => {
-    const raw = values[activeKey];
-    if (raw === undefined || raw === "") {
-      return convertFromEmpty(units);
-    }
-    const num = parseFloat(raw);
+    if (input === "") return null;
+    const num = parseFloat(input);
     if (!Number.isFinite(num)) return null;
     return convertUnit(units, activeKey, num);
-  }, [activeKey, values, units]);
-
-  const handleChange = (key: string, val: string) => {
-    setActiveKey(key);
-    setValues({ [key]: val });
-  };
+  }, [activeKey, input, units]);
 
   return (
     <div className="space-y-3">
@@ -56,13 +48,22 @@ export function UnitConverterTool({ kind }: { kind: ConverterKind }) {
           <input
             type="number"
             className="tool-input max-w-[140px] flex-shrink-0"
-            value={values[u.key] ?? (displayValues ? formatNumber(displayValues[u.key], 4) : "")}
+            value={
+              activeKey === u.key
+                ? input
+                : displayValues
+                  ? formatNumber(displayValues[u.key], 4)
+                  : ""
+            }
             placeholder={ui.placeholderZero}
-            onChange={(e) => handleChange(u.key, e.target.value)}
+            onChange={(e) => {
+              setActiveKey(u.key);
+              setInput(e.target.value);
+            }}
             onFocus={() => {
-              if (displayValues && values[u.key] === undefined) {
-                setValues({ [u.key]: String(displayValues[u.key]) });
+              if (activeKey !== u.key && displayValues) {
                 setActiveKey(u.key);
+                setInput(formatNumber(displayValues[u.key], 4));
               }
             }}
           />
@@ -71,12 +72,6 @@ export function UnitConverterTool({ kind }: { kind: ConverterKind }) {
       ))}
     </div>
   );
-}
-
-function convertFromEmpty(units: UnitDef[]): Record<string, number> {
-  const out: Record<string, number> = {};
-  for (const u of units) out[u.key] = 0;
-  return out;
 }
 
 export function TemperatureConverterTool() {

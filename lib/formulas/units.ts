@@ -111,6 +111,7 @@ export function formatNumber(n: number, decimals = 4): string {
   return n.toLocaleString("en-US", {
     maximumFractionDigits: decimals,
     minimumFractionDigits: 0,
+    useGrouping: false,
   });
 }
 
