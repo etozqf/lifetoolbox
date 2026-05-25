@@ -11,15 +11,20 @@ import {
 } from "react";
 import {
   FONT_FAMILIES,
-  SCROLLER_PRESETS,
-  TEMPLATE_OPTIONS,
   computeAutoFontSizePx,
   fontSizeCss,
-  fontSizeLabel,
   scrollDurationFromSpeed,
   type ScrollDirection,
   type ScrollerFontFamily,
 } from "@/lib/formulas/text-scroller";
+import { useLocale } from "@/components/locale-provider";
+import {
+  getFontFamilyLabel,
+  getFontSizeLabel,
+  getScrollerDefaultText,
+  getScrollerPresets,
+  getScrollerTemplates,
+} from "@/lib/i18n/scroller-content";
 import { useToolUi } from "@/lib/i18n/use-tool-ui";
 
 function SettingsSection({
@@ -50,7 +55,10 @@ function SettingsSection({
 
 export function TextScrollerTool() {
   const ui = useToolUi("text-scroller");
-  const [text, setText] = useState("Your scrolling message here");
+  const { locale } = useLocale();
+  const presets = useMemo(() => getScrollerPresets(locale), [locale]);
+  const templates = useMemo(() => getScrollerTemplates(locale), [locale]);
+  const [text, setText] = useState(() => getScrollerDefaultText(locale));
   const [speedPx, setSpeedPx] = useState(50);
   const [fontSizeScale, setFontSizeScale] = useState(0);
   const [textColor, setTextColor] = useState("#ffffff");
@@ -197,7 +205,7 @@ export function TextScrollerTool() {
   }, [browserDisplay]);
 
   const applyPreset = (idx: number) => {
-    const p = SCROLLER_PRESETS[idx];
+    const p = presets[idx];
     setText(p.text);
     setBgColor(p.bg);
     setTextColor(p.color);
@@ -210,7 +218,7 @@ export function TextScrollerTool() {
   };
 
   const applyTemplate = () => {
-    setText(TEMPLATE_OPTIONS[templateIdx]?.text ?? text);
+    setText(templates[templateIdx]?.text ?? text);
     resetPosition();
   };
 
@@ -318,7 +326,7 @@ export function TextScrollerTool() {
 
       <SettingsSection title={ui.defaultTemplates}>
         <div className="flex flex-wrap gap-2">
-          {SCROLLER_PRESETS.map((p, i) => (
+          {presets.map((p, i) => (
             <button key={p.label} type="button" className="btn-preset text-xs" onClick={() => applyPreset(i)}>
               {p.label}
             </button>
@@ -326,7 +334,7 @@ export function TextScrollerTool() {
         </div>
         <div className="flex flex-wrap gap-2">
           <select className="tool-input flex-1" value={templateIdx} onChange={(e) => setTemplateIdx(Number(e.target.value))}>
-            {TEMPLATE_OPTIONS.map((t, i) => (
+            {templates.map((t, i) => (
               <option key={t.label} value={i}>
                 {t.label}
               </option>
@@ -352,7 +360,7 @@ export function TextScrollerTool() {
 
       <SettingsSection title={ui.styleSettings}>
         <label className="tool-panel block">
-          <span className="text-sm font-medium">{ui.fontSize.replace("{value}", fontSizeLabel(fontSizeScale))}</span>
+          <span className="text-sm font-medium">{ui.fontSize.replace("{value}", getFontSizeLabel(fontSizeScale, locale))}</span>
           <input
             type="range"
             min={0}
@@ -368,7 +376,7 @@ export function TextScrollerTool() {
           <select className="tool-input mt-2" value={fontFamily} onChange={(e) => setFontFamily(e.target.value as ScrollerFontFamily)}>
             {FONT_FAMILIES.map((f) => (
               <option key={f.id} value={f.id}>
-                {f.label}
+                {getFontFamilyLabel(f.id, locale)}
               </option>
             ))}
           </select>

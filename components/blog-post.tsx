@@ -3,12 +3,21 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { JsonLd } from "./json-ld";
 import { AdBanner } from "./ad-banner";
+import { getMessages } from "@/lib/i18n";
+import { localizePath } from "@/lib/i18n/paths";
+import { toolTranslationsZh } from "@/lib/i18n/tool-translations";
 import { getToolBySlug } from "@/lib/tool-registry";
 import { siteConfig } from "@/lib/seo";
 import type { BlogPost } from "@/lib/blog";
 
 export function BlogPostView({ post }: { post: BlogPost }) {
+  const locale = post.locale;
+  const messages = getMessages(locale);
   const tool = post.relatedTool ? getToolBySlug(post.relatedTool) : null;
+  const toolName =
+    tool && locale === "zh"
+      ? (toolTranslationsZh[tool.slug]?.name ?? tool.name)
+      : tool?.name;
   const faq = extractFaq(post.content);
 
   return (
@@ -45,14 +54,14 @@ export function BlogPostView({ post }: { post: BlogPost }) {
       <div className="prose prose-slate mt-8 max-w-none dark:prose-invert prose-pre:bg-[var(--surface-muted)]">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown>
       </div>
-      {tool && (
+      {tool && toolName && (
         <div className="mt-10 rounded-xl border border-brand bg-brand-light p-6 dark:bg-brand/10">
-          <h2 className="font-semibold">Try it yourself</h2>
+          <h2 className="font-semibold">{messages.blog.tryItYourself}</h2>
           <p className="mt-2 text-sm text-[var(--muted)]">
-            Use our free {tool.name} — no signup required.
+            {messages.blog.useTool.replace("{tool}", toolName)}
           </p>
-          <Link href={tool.path} className="btn-primary mt-4 inline-flex">
-            Open {tool.name} →
+          <Link href={localizePath(tool.path, locale)} className="btn-primary mt-4 inline-flex">
+            {messages.blog.openTool.replace("{tool}", toolName)}
           </Link>
         </div>
       )}
@@ -62,7 +71,15 @@ export function BlogPostView({ post }: { post: BlogPost }) {
 }
 
 function extractFaq(content: string): { q: string; a: string }[] {
-  const faqSection = content.split("## Frequently Asked Questions")[1];
+  const markers = ["## Frequently Asked Questions", "## 常见问题"];
+  let faqSection: string | undefined;
+  for (const marker of markers) {
+    const part = content.split(marker)[1];
+    if (part) {
+      faqSection = part;
+      break;
+    }
+  }
   if (!faqSection) return [];
   const items: { q: string; a: string }[] = [];
   const blocks = faqSection.split("### ").slice(1);

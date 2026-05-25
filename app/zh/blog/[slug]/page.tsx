@@ -8,7 +8,7 @@ export function generateStaticParams() {
 }
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
-  const post = getPostBySlug(params.slug);
+  const post = getPostBySlug(params.slug, "zh");
   if (!post) return {};
   return {
     title: post.title,
@@ -25,14 +25,7 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
 }
 
 export default function ZhBlogPostPage({ params }: { params: { slug: string } }) {
-  const post = getPostBySlug(params.slug);
+  const post = getPostBySlug(params.slug, "zh");
   if (!post) notFound();
-  return (
-    <>
-      <p className="mx-auto max-w-prose px-4 pt-8 text-sm text-[var(--muted)]">
-        本文目前为英文版本。
-      </p>
-      <BlogPostView post={post} />
-    </>
-  );
+  return <BlogPostView post={post} />;
 }

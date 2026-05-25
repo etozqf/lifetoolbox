@@ -25,7 +25,9 @@ export const en = {
   blog: {
     title: "Blog",
     subtitle: "Practical guides for everyday life — with free tools to try inline.",
-    zhNote: "Blog articles are currently available in English.",
+    tryItYourself: "Try it yourself",
+    useTool: "Use our free {tool} — no signup required.",
+    openTool: "Open {tool} →",
   },
   toolPage: {
     privacyNote: "All calculations run locally in your browser — nothing is uploaded.",

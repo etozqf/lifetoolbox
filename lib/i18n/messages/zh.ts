@@ -27,7 +27,9 @@ export const zh: Messages = {
   blog: {
     title: "博客",
     subtitle: "实用生活指南——搭配免费在线工具一起使用。",
-    zhNote: "博客文章目前为英文版本。",
+    tryItYourself: "亲自试试",
+    useTool: "使用我们的免费{tool}——无需注册。",
+    openTool: "打开{tool} →",
   },
   toolPage: {
     privacyNote: "所有计算均在浏览器本地完成，不会上传您的数据。",

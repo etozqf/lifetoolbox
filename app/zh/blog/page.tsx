@@ -13,12 +13,11 @@ export const metadata: Metadata = {
 };
 
 export default function ZhBlogIndexPage() {
-  const posts = getAllPosts();
+  const posts = getAllPosts("zh");
   return (
     <div className="mx-auto max-w-content px-4 py-12">
       <h1 className="text-3xl font-bold">博客</h1>
       <p className="mt-2 text-[var(--muted)]">实用生活指南——搭配免费在线工具一起使用。</p>
-      <p className="mt-2 text-sm text-[var(--muted)]">博客文章目前为英文版本。</p>
       <ul className="mt-10 space-y-8">
         {posts.map((post) => (
           <li key={post.slug}>
