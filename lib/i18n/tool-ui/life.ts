@@ -40,7 +40,11 @@ export type LifeToolSlug =
   | "permutation-combination"
   | "roman-numeral"
   | "random-groups"
-  | "color-converter";
+  | "color-converter"
+  | "webp-converter"
+  | "barcode-generator"
+  | "budget-calculator"
+  | "body-fat-calculator";
 
 export const lifeToolUiEn = {
   "tip-calculator": {
@@ -384,6 +388,52 @@ export const lifeToolUiEn = {
     errInvalidRgb: "Invalid RGB value. Use rgb(r, g, b).",
     errInvalidHsl: "Invalid HSL value. Use hsl(h, s%, l%).",
   },
+  "webp-converter": {
+    selectImageMax: "Select image (max 10 MB)",
+    formatWebp: "WebP",
+    formatPng: "PNG",
+    formatJpeg: "JPEG",
+    quality: "Quality: {n}%",
+    converting: "Converting…",
+    done: "Done: {size}",
+    preview: "Preview",
+    download: "Download",
+    errConvert: "Conversion failed",
+    footer: "Processed locally in your browser. Nothing is uploaded.",
+  },
+  "barcode-generator": {
+    value: "Barcode value",
+    placeholder: "Digits or text for barcode",
+    CODE128: "CODE128",
+    EAN13: "EAN-13",
+    UPC: "UPC",
+    downloadPng: "Download PNG",
+    errRender: "Could not render barcode",
+    footer: "EAN-13: 12–13 digits. UPC: 11–12 digits. CODE128: up to 80 characters.",
+  },
+  "budget-calculator": {
+    baseIncome: "Additional income ($)",
+    incomeLines: "Income lines (name amount per line)",
+    expenseLines: "Expense lines (name amount per line)",
+    linesPlaceholder: "Rent 1200\nGroceries 400",
+    totalIncome: "Total income",
+    totalExpenses: "Total expenses",
+    balance: "Balance",
+    savingsRate: "Savings rate",
+    footer: "For planning only—not tax or investment advice.",
+  },
+  "body-fat-calculator": {
+    male: "Male",
+    female: "Female",
+    heightCm: "Height (cm)",
+    neckCm: "Neck (cm)",
+    waistCm: "Waist (cm)",
+    hipCm: "Hip (cm)",
+    bodyFat: "Estimated body fat",
+    invalid: "Enter valid measurements (waist must be greater than neck).",
+    disclaimer:
+      "US Navy method estimate only. Not a medical diagnosis—consult a professional for health decisions.",
+  },
 } as const satisfies Record<LifeToolSlug, Record<string, string>>;
 
 export const lifeToolUiZh: Record<LifeToolSlug, Record<string, string>> = {
@@ -726,5 +776,51 @@ export const lifeToolUiZh: Record<LifeToolSlug, Record<string, string>> = {
     errInvalidHex: "HEX 色值无效。",
     errInvalidRgb: "RGB 无效，请使用 rgb(r, g, b) 格式。",
     errInvalidHsl: "HSL 无效，请使用 hsl(h, s%, l%) 格式。",
+  },
+  "webp-converter": {
+    selectImageMax: "选择图片（最大 10 MB）",
+    formatWebp: "WebP",
+    formatPng: "PNG",
+    formatJpeg: "JPEG",
+    quality: "质量：{n}%",
+    converting: "转换中…",
+    done: "完成：{size}",
+    preview: "预览",
+    download: "下载",
+    errConvert: "转换失败",
+    footer: "在浏览器本地处理，不会上传。",
+  },
+  "barcode-generator": {
+    value: "条码内容",
+    placeholder: "输入数字或文本",
+    CODE128: "CODE128",
+    EAN13: "EAN-13",
+    UPC: "UPC",
+    downloadPng: "下载 PNG",
+    errRender: "无法生成条码",
+    footer: "EAN-13：12–13 位数字。UPC：11–12 位。CODE128：最多 80 个字符。",
+  },
+  "budget-calculator": {
+    baseIncome: "额外收入（$）",
+    incomeLines: "收入明细（每行：名称 金额）",
+    expenseLines: "支出明细（每行：名称 金额）",
+    linesPlaceholder: "房租 1200\n餐饮 400",
+    totalIncome: "总收入",
+    totalExpenses: "总支出",
+    balance: "结余",
+    savingsRate: "储蓄率",
+    footer: "仅供规划参考，不构成税务或投资建议。",
+  },
+  "body-fat-calculator": {
+    male: "男性",
+    female: "女性",
+    heightCm: "身高（厘米）",
+    neckCm: "颈围（厘米）",
+    waistCm: "腰围（厘米）",
+    hipCm: "臀围（厘米）",
+    bodyFat: "估算体脂率",
+    invalid: "请输入有效数据（腰围须大于颈围）。",
+    disclaimer:
+      "仅为美国海军围度法估算，非医学诊断——健康决策请咨询专业人士。",
   },
 };

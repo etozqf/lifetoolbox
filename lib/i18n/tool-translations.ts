@@ -56,4 +56,8 @@ export const toolTranslationsZh: Record<string, { name: string; description: str
   "roman-numeral": { name: "罗马数字转换", description: "阿拉伯数字与罗马数字双向转换。" },
   "random-groups": { name: "随机分组", description: "将名单随机分成若干组。" },
   "color-converter": { name: "色码转换器", description: "HEX、RGB、HSL 互转与取色。" },
+  "webp-converter": { name: "WebP 转换器", description: "在浏览器中将图片转为 WebP、PNG 或 JPEG。" },
+  "barcode-generator": { name: "条形码生成器", description: "生成 CODE128、EAN-13、UPC 条形码。" },
+  "budget-calculator": { name: "预算计算器", description: "汇总收入与支出，计算结余与储蓄率。" },
+  "body-fat-calculator": { name: "体脂率计算器", description: "使用美国海军围度法估算体脂百分比。" },
 };

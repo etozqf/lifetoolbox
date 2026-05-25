@@ -523,9 +523,56 @@ export const tools: ToolEntry[] = [
     related: ["qr-code", "compress", "resize"],
     phase: 4,
   },
+  // --- Phase 5: Image / Finance / Health ---
+  {
+    slug: "webp-converter",
+    cluster: "image",
+    path: "/tools/image/webp-converter",
+    name: "WebP Converter",
+    description: "Convert images to WebP, PNG, or JPEG in your browser.",
+    icon: "Image",
+    keywords: ["webp converter", "convert to webp", "image format converter"],
+    related: ["compress", "jpg-to-png", "resize"],
+    phase: 5,
+  },
+  {
+    slug: "barcode-generator",
+    cluster: "image",
+    path: "/tools/image/barcode-generator",
+    name: "Barcode Generator",
+    description: "Generate CODE128, EAN-13, and UPC barcodes from text.",
+    icon: "Barcode",
+    keywords: ["barcode generator", "ean13 barcode", "upc barcode"],
+    related: ["qr-code", "webp-converter"],
+    phase: 5,
+  },
+  {
+    slug: "budget-calculator",
+    cluster: "finance",
+    path: "/tools/finance/budget-calculator",
+    name: "Budget Calculator",
+    description: "Sum income and expenses, balance, and savings rate.",
+    icon: "Wallet",
+    keywords: ["budget calculator", "monthly budget planner", "savings rate"],
+    related: ["bill-splitter", "compound-interest", "mortgage-calculator"],
+    phase: 5,
+    disclaimer: "financial",
+  },
+  {
+    slug: "body-fat-calculator",
+    cluster: "health",
+    path: "/tools/health/body-fat-calculator",
+    name: "Body Fat Calculator",
+    description: "Estimate body fat % using the US Navy circumference method.",
+    icon: "Activity",
+    keywords: ["body fat calculator", "navy body fat formula", "body composition"],
+    related: ["bmi-calculator", "ideal-weight", "calorie-calculator"],
+    phase: 5,
+    disclaimer: "medical",
+  },
 ];
 
-export const CURRENT_PHASE = 4;
+export const CURRENT_PHASE = 5;
 
 export const activeClusters: ToolCluster[] = [
   "calc",

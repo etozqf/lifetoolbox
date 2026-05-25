@@ -54,6 +54,14 @@ export const TOOL_LOADERS: Record<string, ToolLoader> = {
   "roman-numeral": { kind: "component", module: "roman-numeral", exportName: "RomanNumeralTool" },
   "random-groups": { kind: "component", module: "random-groups", exportName: "RandomGroupsTool" },
   "color-converter": { kind: "component", module: "color-converter", exportName: "ColorConverterTool" },
+  "webp-converter": { kind: "component", module: "webp-converter", exportName: "WebpConverterTool" },
+  "barcode-generator": { kind: "component", module: "barcode-generator", exportName: "BarcodeGeneratorTool" },
+  "budget-calculator": { kind: "component", module: "budget-calculator", exportName: "BudgetCalculatorTool" },
+  "body-fat-calculator": {
+    kind: "component",
+    module: "body-fat-calculator",
+    exportName: "BodyFatCalculatorTool",
+  },
 };
 
 export function getToolSlugFromSegments(segments?: string[]) {
