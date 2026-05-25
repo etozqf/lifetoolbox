@@ -16,7 +16,7 @@ export function scrollDurationFromSpeed(travelPx: number, speedPxPerSec: number)
 }
 
 /**
- * Font size scale: 0 = auto (~72% of display height via cqh).
+ * Font size scale: 0 = auto (fill display height; computed in the component).
  * 1–100 = percentage of display height (not px).
  */
 export function fontSizeLabel(scale: number): string {
@@ -24,9 +24,19 @@ export function fontSizeLabel(scale: number): string {
   return `${scale}%`;
 }
 
-export function fontSizeCss(scale: number, autoPct = 72): string {
-  if (scale === 0) return `${autoPct}cqh`;
+export function fontSizeCss(scale: number): string {
   return `${Math.min(100, Math.max(10, scale))}cqh`;
+}
+
+/** Fit text line-height to a target container height (measured at 10px baseline). */
+export function computeAutoFontSizePx(
+  containerHeightPx: number,
+  textHeightAt10Px: number,
+  fillRatio = 0.98
+): number {
+  const target = Math.max(12, containerHeightPx * fillRatio);
+  if (textHeightAt10Px <= 0) return target;
+  return (10 * target) / textHeightAt10Px;
 }
 
 export const SCROLLER_PRESETS = [

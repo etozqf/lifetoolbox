@@ -13,6 +13,7 @@ import {
   FONT_FAMILIES,
   SCROLLER_PRESETS,
   TEMPLATE_OPTIONS,
+  computeAutoFontSizePx,
   fontSizeCss,
   fontSizeLabel,
   scrollDurationFromSpeed,
@@ -63,13 +64,19 @@ export function TextScrollerTool() {
   const [animKey, setAnimKey] = useState(0);
   const [templateIdx, setTemplateIdx] = useState(0);
   const [travelPx, setTravelPx] = useState(800);
+  const [autoFontPx, setAutoFontPx] = useState(48);
 
   const stageRef = useRef<HTMLDivElement>(null);
+  const browserStageRef = useRef<HTMLDivElement>(null);
   const measureRef = useRef<HTMLSpanElement>(null);
+  const fitMeasureRef = useRef<HTMLSpanElement>(null);
 
   const horizontal = direction === "left" || direction === "right";
   const displayText = text.trim() || "Enter text above";
-  const fontCss = useMemo(() => fontSizeCss(fontSizeScale), [fontSizeScale]);
+  const fontCss = useMemo(
+    () => (fontSizeScale === 0 ? `${autoFontPx}px` : fontSizeCss(fontSizeScale)),
+    [fontSizeScale, autoFontPx]
+  );
   const fontStack = FONT_FAMILIES.find((f) => f.id === fontFamily)?.css ?? FONT_FAMILIES[0].css;
   const duration = useMemo(
     () => scrollDurationFromSpeed(travelPx, speedPx),
@@ -96,15 +103,61 @@ export function TextScrollerTool() {
     }
   }, [horizontal, repeatSpacing]);
 
+  const fitAutoFontSize = useCallback(() => {
+    if (fontSizeScale !== 0) return;
+    const container = browserDisplay ? browserStageRef.current : stageRef.current;
+    const probe = fitMeasureRef.current;
+    if (!container || !probe) return;
+    probe.style.fontSize = "10px";
+    probe.style.lineHeight = "1";
+    const textHeightAt10 = probe.offsetHeight;
+    setAutoFontPx(computeAutoFontSizePx(container.clientHeight, textHeightAt10));
+  }, [fontSizeScale, browserDisplay]);
+
+  useLayoutEffect(() => {
+    fitAutoFontSize();
+  }, [
+    displayText,
+    stageHeight,
+    fontSizeScale,
+    fontWeight,
+    letterSpacing,
+    fontFamily,
+    browserDisplay,
+    fitAutoFontSize,
+  ]);
+
   useLayoutEffect(() => {
     measureTravel();
-  }, [displayText, stageHeight, fontSizeScale, fontWeight, letterSpacing, fontFamily, measureTravel]);
+  }, [
+    displayText,
+    stageHeight,
+    fontSizeScale,
+    autoFontPx,
+    fontWeight,
+    letterSpacing,
+    fontFamily,
+    measureTravel,
+  ]);
 
   useEffect(() => {
-    const ro = new ResizeObserver(measureTravel);
+    const ro = new ResizeObserver(() => {
+      fitAutoFontSize();
+      measureTravel();
+    });
     if (stageRef.current) ro.observe(stageRef.current);
+    if (browserStageRef.current) ro.observe(browserStageRef.current);
     return () => ro.disconnect();
-  }, [measureTravel]);
+  }, [fitAutoFontSize, measureTravel, browserDisplay]);
+
+  useEffect(() => {
+    const onFs = () => {
+      fitAutoFontSize();
+      measureTravel();
+    };
+    document.addEventListener("fullscreenchange", onFs);
+    return () => document.removeEventListener("fullscreenchange", onFs);
+  }, [fitAutoFontSize, measureTravel]);
 
   const resetPosition = () => setAnimKey((k) => k + 1);
 
@@ -164,6 +217,7 @@ export function TextScrollerTool() {
     fontSize: fontCss,
     fontFamily: fontStack,
     fontWeight,
+    lineHeight: 1,
     letterSpacing: `${letterSpacing}px`,
     animationName: displayText ? animationName : "none",
     animationDuration: `${duration}s`,
@@ -204,7 +258,20 @@ export function TextScrollerTool() {
   );
 
   return (
-    <div className="space-y-4">
+    <div className="relative space-y-4">
+      <span
+        ref={fitMeasureRef}
+        aria-hidden
+        className="pointer-events-none absolute left-0 top-0 whitespace-nowrap opacity-0"
+        style={{
+          fontFamily: fontStack,
+          fontWeight,
+          letterSpacing: `${letterSpacing}px`,
+          lineHeight: 1,
+        }}
+      >
+        {displayText}
+      </span>
       <style>{`
         @keyframes marquee-left {
           0% { transform: translateX(0); }
@@ -293,7 +360,7 @@ export function TextScrollerTool() {
             onChange={(e) => setFontSizeScale(Number(e.target.value))}
           />
           <p className="mt-1 text-xs text-[var(--muted)]">
-            Auto scales text to ~72% of display height. Otherwise uses % of display height — not pixels.
+            Auto fills the display height (ideal for fullscreen). Otherwise uses % of display height — not pixels.
           </p>
         </label>
         <label className="tool-panel block">
@@ -435,6 +502,7 @@ export function TextScrollerTool() {
             Exit
           </button>
           <div
+            ref={browserStageRef}
             className="relative h-full w-full overflow-hidden"
             style={{ containerType: "size" }}
           >
