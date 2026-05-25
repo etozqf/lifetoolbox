@@ -52,4 +52,8 @@ export const toolTranslationsZh: Record<string, { name: string; description: str
   "currency-converter": { name: "货币换算", description: "使用实时汇率在全球货币之间换算。" },
   "mortgage-calculator": { name: "房贷计算器", description: "根据房价、首付和利率估算月供。" },
   "compound-interest": { name: "复利计算器", description: "预测复利投资及每月定投的增长。" },
+  "permutation-combination": { name: "排列组合计算器", description: "计算 P(n,r) 与 C(n,r)。" },
+  "roman-numeral": { name: "罗马数字转换", description: "阿拉伯数字与罗马数字双向转换。" },
+  "random-groups": { name: "随机分组", description: "将名单随机分成若干组。" },
+  "color-converter": { name: "色码转换器", description: "HEX、RGB、HSL 互转与取色。" },
 };

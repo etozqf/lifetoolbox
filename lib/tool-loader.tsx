@@ -46,6 +46,14 @@ export const TOOL_LOADERS: Record<string, ToolLoader> = {
   "currency-converter": { kind: "component", module: "currency-converter", exportName: "CurrencyConverterTool" },
   "mortgage-calculator": { kind: "component", module: "mortgage-calculator", exportName: "MortgageCalculatorTool" },
   "compound-interest": { kind: "component", module: "compound-interest", exportName: "CompoundInterestTool" },
+  "permutation-combination": {
+    kind: "component",
+    module: "permutation-combination",
+    exportName: "PermutationCombinationTool",
+  },
+  "roman-numeral": { kind: "component", module: "roman-numeral", exportName: "RomanNumeralTool" },
+  "random-groups": { kind: "component", module: "random-groups", exportName: "RandomGroupsTool" },
+  "color-converter": { kind: "component", module: "color-converter", exportName: "ColorConverterTool" },
 };
 
 export function getToolSlugFromSegments(segments?: string[]) {

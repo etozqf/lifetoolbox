@@ -36,7 +36,11 @@ export type LifeToolSlug =
   | "split"
   | "currency-converter"
   | "mortgage-calculator"
-  | "compound-interest";
+  | "compound-interest"
+  | "permutation-combination"
+  | "roman-numeral"
+  | "random-groups"
+  | "color-converter";
 
 export const lifeToolUiEn = {
   "tip-calculator": {
@@ -334,6 +338,51 @@ export const lifeToolUiEn = {
     futureValue: "Future value",
     totalContributed: "Total contributed",
     interestEarned: "Interest earned",
+  },
+  "permutation-combination": {
+    nLabel: "n (total items)",
+    rLabel: "r (selected items)",
+    permutationLabel: "Permutation P(n,r)",
+    combinationLabel: "Combination C(n,r)",
+    permutationFormula: "P = n! / (n−r)!",
+    combinationFormula: "C = n! / (r! × (n−r)!)",
+    errInvalid: "Enter valid whole numbers for n and r.",
+    errNegative: "n and r must be zero or positive.",
+    errNLessThanR: "r cannot be greater than n.",
+    errTooLarge: "n must be 170 or less.",
+  },
+  "roman-numeral": {
+    toRoman: "Arabic → Roman",
+    toArabic: "Roman → Arabic",
+    arabicInput: "Arabic number",
+    romanInput: "Roman numeral",
+    arabicPlaceholder: "e.g. 2024",
+    romanPlaceholder: "e.g. MMXXIV",
+    errInvalidNumber: "Enter a whole number between 1 and 3999.",
+    errOutOfRange: "Number must be between 1 and 3999.",
+    errInvalidRoman: "Invalid Roman numeral.",
+    rangeNote: "Standard Roman numerals support values from 1 to 3999.",
+  },
+  "random-groups": {
+    names: "Names (one per line)",
+    namesPlaceholder: "Alice\nBob\nCharlie…",
+    byGroupCount: "By number of groups",
+    byGroupSize: "By group size",
+    groupCountLabel: "Number of groups",
+    groupSizeLabel: "People per group",
+    regroup: "Regroup",
+    groupLabel: "Group",
+    errNoNames: "Add at least one name.",
+    errInvalidCount: "Enter at least 1 group.",
+    errInvalidSize: "Enter at least 1 person per group.",
+    strategyNote:
+      "Names are shuffled randomly, then distributed round-robin when splitting by group count.",
+  },
+  "color-converter": {
+    colorPicker: "Pick a color",
+    errInvalidHex: "Invalid HEX color.",
+    errInvalidRgb: "Invalid RGB value. Use rgb(r, g, b).",
+    errInvalidHsl: "Invalid HSL value. Use hsl(h, s%, l%).",
   },
 } as const satisfies Record<LifeToolSlug, Record<string, string>>;
 
@@ -633,5 +682,49 @@ export const lifeToolUiZh: Record<LifeToolSlug, Record<string, string>> = {
     futureValue: "未来价值",
     totalContributed: "累计投入",
     interestEarned: "利息收益",
+  },
+  "permutation-combination": {
+    nLabel: "n（总数）",
+    rLabel: "r（选取数）",
+    permutationLabel: "排列 P(n,r)",
+    combinationLabel: "组合 C(n,r)",
+    permutationFormula: "P = n! / (n−r)!",
+    combinationFormula: "C = n! / (r! × (n−r)!)",
+    errInvalid: "请输入有效的整数 n 和 r。",
+    errNegative: "n 和 r 必须为零或正整数。",
+    errNLessThanR: "r 不能大于 n。",
+    errTooLarge: "n 不能超过 170。",
+  },
+  "roman-numeral": {
+    toRoman: "阿拉伯 → 罗马",
+    toArabic: "罗马 → 阿拉伯",
+    arabicInput: "阿拉伯数字",
+    romanInput: "罗马数字",
+    arabicPlaceholder: "例如 2024",
+    romanPlaceholder: "例如 MMXXIV",
+    errInvalidNumber: "请输入 1 到 3999 之间的整数。",
+    errOutOfRange: "数字必须在 1 到 3999 之间。",
+    errInvalidRoman: "罗马数字无效。",
+    rangeNote: "标准罗马数字支持 1 到 3999。",
+  },
+  "random-groups": {
+    names: "姓名（每行一个）",
+    namesPlaceholder: "Alice\nBob\nCharlie…",
+    byGroupCount: "按组数分组",
+    byGroupSize: "按每组人数",
+    groupCountLabel: "组数",
+    groupSizeLabel: "每组人数",
+    regroup: "重新分组",
+    groupLabel: "组",
+    errNoNames: "请至少添加一个姓名。",
+    errInvalidCount: "组数至少为 1。",
+    errInvalidSize: "每组人数至少为 1。",
+    strategyNote: "名单随机打乱后，按组数分组时采用轮询分配，尽量均分。",
+  },
+  "color-converter": {
+    colorPicker: "取色器",
+    errInvalidHex: "HEX 色值无效。",
+    errInvalidRgb: "RGB 无效，请使用 rgb(r, g, b) 格式。",
+    errInvalidHsl: "HSL 无效，请使用 hsl(h, s%, l%) 格式。",
   },
 };

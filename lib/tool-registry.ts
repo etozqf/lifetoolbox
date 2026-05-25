@@ -478,9 +478,54 @@ export const tools: ToolEntry[] = [
     phase: 3,
     disclaimer: "financial",
   },
+  // --- Phase 4: Calc / Random / Image ---
+  {
+    slug: "permutation-combination",
+    cluster: "calc",
+    path: "/tools/calc/permutation-combination",
+    name: "Permutation & Combination Calculator",
+    description: "Calculate P(n,r) permutations and C(n,r) combinations.",
+    icon: "Calculator",
+    keywords: ["permutation calculator", "combination calculator", "nCr nPr"],
+    related: ["percentage-calculator", "number-generator", "random-groups"],
+    phase: 4,
+  },
+  {
+    slug: "roman-numeral",
+    cluster: "calc",
+    path: "/tools/calc/roman-numeral",
+    name: "Roman Numeral Converter",
+    description: "Convert between Arabic numbers and Roman numerals (1–3999).",
+    icon: "Hash",
+    keywords: ["roman numeral converter", "arabic to roman", "roman to number"],
+    related: ["percentage-calculator", "number-generator"],
+    phase: 4,
+  },
+  {
+    slug: "random-groups",
+    cluster: "random",
+    path: "/tools/random/random-groups",
+    name: "Random Group Generator",
+    description: "Randomly split a list of names into teams or groups.",
+    icon: "Users",
+    keywords: ["random group generator", "split into teams", "random team picker"],
+    related: ["name-picker", "decision-wheel", "number-generator"],
+    phase: 4,
+  },
+  {
+    slug: "color-converter",
+    cluster: "image",
+    path: "/tools/image/color-converter",
+    name: "Color Converter",
+    description: "Convert between HEX, RGB, and HSL with live color preview.",
+    icon: "Palette",
+    keywords: ["hex to rgb", "color converter", "hsl converter", "color code"],
+    related: ["qr-code", "compress", "resize"],
+    phase: 4,
+  },
 ];
 
-export const CURRENT_PHASE = 3;
+export const CURRENT_PHASE = 4;
 
 export const activeClusters: ToolCluster[] = [
   "calc",
