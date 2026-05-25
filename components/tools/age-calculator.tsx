@@ -2,17 +2,22 @@
 
 import { useMemo, useState } from "react";
 import { calcAge } from "@/lib/formulas/date";
+import { useToolUi } from "@/lib/i18n/use-tool-ui";
+import { useLocale } from "@/components/locale-provider";
 
 export function AgeCalculatorTool() {
+  const ui = useToolUi("age-calculator");
+  const { locale } = useLocale();
   const [birthDate, setBirthDate] = useState("1990-05-15");
   const [showMore, setShowMore] = useState(false);
 
   const result = useMemo(() => calcAge(birthDate), [birthDate]);
+  const numFmt = (n: number) => n.toLocaleString(locale === "zh" ? "zh-CN" : "en-US");
 
   return (
     <div className="space-y-4">
       <label className="tool-panel block">
-        <span className="text-sm font-medium">Date of birth</span>
+        <span className="text-sm font-medium">{ui.birthDate}</span>
         <input
           type="date"
           className="tool-input mt-2"
@@ -23,38 +28,35 @@ export function AgeCalculatorTool() {
       </label>
 
       {!result.ok ? (
-        <p className="text-red-500">{result.error}</p>
+        <p className="text-red-500">{ui.invalidBirth}</p>
       ) : (
         <div className="result-card space-y-3">
           <p className="text-lg">
-            You are{" "}
-            <strong>
-              {result.years} years, {result.months} months, {result.days} days
-            </strong>{" "}
-            old
+            {ui.ageResult
+              .replace("{years}", String(result.years))
+              .replace("{months}", String(result.months))
+              .replace("{days}", String(result.days))}
           </p>
           <p className="text-[var(--muted)]">
-            🎂 Next birthday in <strong>{result.daysUntilBirthday}</strong> days
+            {ui.nextBirthday.replace("{n}", String(result.daysUntilBirthday))}
           </p>
           <button
             type="button"
             className="text-sm text-brand hover:underline"
             onClick={() => setShowMore(!showMore)}
           >
-            {showMore ? "Hide stats" : "Show more stats"}
+            {showMore ? ui.hideMore : ui.showMore}
           </button>
           {showMore && (
             <ul className="space-y-1 text-sm text-[var(--muted)]">
-              <li>Total days lived: {result.totalDays.toLocaleString()}</li>
-              <li>Total hours: {result.totalHours.toLocaleString()}</li>
+              <li>{ui.totalDays} {numFmt(result.totalDays)}</li>
+              <li>{ui.totalHours} {numFmt(result.totalHours)}</li>
             </ul>
           )}
         </div>
       )}
 
-      <p className="text-xs text-[var(--muted)]">
-        Your birthday never leaves your browser.
-      </p>
+      <p className="text-xs text-[var(--muted)]">{ui.privacy}</p>
     </div>
   );
 }

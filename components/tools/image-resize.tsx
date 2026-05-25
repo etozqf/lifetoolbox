@@ -1,8 +1,10 @@
 "use client";
 import { useState } from "react";
 import { canvasToBlob, downloadBlob, drawImageToCanvas, loadImageFromFile } from "@/lib/image/client-image";
+import { useToolUi } from "@/lib/i18n/use-tool-ui";
 
 export function ImageResizeTool() {
+  const ui = useToolUi("resize");
   const [width, setWidth] = useState("800");
   const [height, setHeight] = useState("600");
   const [lockRatio, setLockRatio] = useState(true);
@@ -17,7 +19,7 @@ export function ImageResizeTool() {
     const canvas = drawImageToCanvas(img, w, h);
     const blob = await canvasToBlob(canvas, "image/png");
     setPreview(URL.createObjectURL(blob));
-    setStatus(`${w}×${h}px`);
+    setStatus(ui.dimensions.replace("{w}", String(w)).replace("{h}", String(h)));
     return blob;
   };
 
@@ -26,7 +28,7 @@ export function ImageResizeTool() {
     setFile(f);
     try {
       await resize(f, parseInt(width, 10) || 800, parseInt(height, 10) || 600);
-    } catch (e) { setStatus(e instanceof Error ? e.message : "Error"); }
+    } catch (e) { setStatus(e instanceof Error ? e.message : ui.error); }
   };
 
   const onWidth = (w: string) => {
@@ -45,21 +47,21 @@ export function ImageResizeTool() {
   return (
     <div className="space-y-4">
       <label className="tool-panel block">
-        <span className="text-sm font-medium">Select image</span>
+        <span className="text-sm font-medium">{ui.selectImage}</span>
         <input type="file" accept="image/*" className="mt-2 w-full text-sm" onChange={(e) => onFile(e.target.files?.[0])} />
       </label>
       <div className="grid grid-cols-2 gap-4">
-        <label className="tool-panel block"><span className="text-sm font-medium">Width (px)</span>
+        <label className="tool-panel block"><span className="text-sm font-medium">{ui.width}</span>
           <input type="number" className="tool-input mt-2" value={width} onChange={(e) => onWidth(e.target.value)} /></label>
-        <label className="tool-panel block"><span className="text-sm font-medium">Height (px)</span>
+        <label className="tool-panel block"><span className="text-sm font-medium">{ui.height}</span>
           <input type="number" className="tool-input mt-2" value={height} onChange={(e) => setHeight(e.target.value)} disabled={lockRatio} /></label>
       </div>
       <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" checked={lockRatio} onChange={(e) => setLockRatio(e.target.checked)} /> Lock aspect ratio
+        <input type="checkbox" checked={lockRatio} onChange={(e) => setLockRatio(e.target.checked)} /> {ui.lockAspect}
       </label>
       {status && <p className="text-sm">{status}</p>}
-      {preview && <div className="result-card"><img src={preview} alt="Preview" className="max-h-64 rounded-lg" /></div>}
-      {file && <button type="button" className="btn-primary w-full" onClick={download}>Download PNG</button>}
+      {preview && <div className="result-card"><img src={preview} alt={ui.preview} className="max-h-64 rounded-lg" /></div>}
+      {file && <button type="button" className="btn-primary w-full" onClick={download}>{ui.downloadPng}</button>}
     </div>
   );
 }

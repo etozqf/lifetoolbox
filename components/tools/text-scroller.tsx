@@ -20,6 +20,7 @@ import {
   type ScrollDirection,
   type ScrollerFontFamily,
 } from "@/lib/formulas/text-scroller";
+import { useToolUi } from "@/lib/i18n/use-tool-ui";
 
 function SettingsSection({
   title,
@@ -48,6 +49,7 @@ function SettingsSection({
 }
 
 export function TextScrollerTool() {
+  const ui = useToolUi("text-scroller");
   const [text, setText] = useState("Your scrolling message here");
   const [speedPx, setSpeedPx] = useState(50);
   const [fontSizeScale, setFontSizeScale] = useState(0);
@@ -72,7 +74,7 @@ export function TextScrollerTool() {
   const fitMeasureRef = useRef<HTMLSpanElement>(null);
 
   const horizontal = direction === "left" || direction === "right";
-  const displayText = text.trim() || "Enter text above";
+  const displayText = text.trim() || ui.emptyDisplay;
   const fontCss = useMemo(
     () => (fontSizeScale === 0 ? `${autoFontPx}px` : fontSizeCss(fontSizeScale)),
     [fontSizeScale, autoFontPx]
@@ -301,20 +303,20 @@ export function TextScrollerTool() {
 
       <div className="flex flex-wrap gap-2">
         <button type="button" className="btn-primary" onClick={() => setPaused((p) => !p)}>
-          {paused ? "▶ Play" : "⏸ Pause"}
+          {paused ? ui.play : ui.pause}
         </button>
         <button type="button" className="btn-secondary" onClick={resetPosition}>
-          ↺ Reset position
+          {ui.resetPosition}
         </button>
         <button type="button" className="btn-secondary" onClick={enterFullscreen}>
-          ⛶ Fullscreen
+          {ui.fullscreen}
         </button>
         <button type="button" className="btn-secondary" onClick={() => setBrowserDisplay(true)}>
-          ⊞ Full browser
+          {ui.fullBrowser}
         </button>
       </div>
 
-      <SettingsSection title="Default templates">
+      <SettingsSection title={ui.defaultTemplates}>
         <div className="flex flex-wrap gap-2">
           {SCROLLER_PRESETS.map((p, i) => (
             <button key={p.label} type="button" className="btn-preset text-xs" onClick={() => applyPreset(i)}>
@@ -331,26 +333,26 @@ export function TextScrollerTool() {
             ))}
           </select>
           <button type="button" className="btn-secondary" onClick={applyTemplate}>
-            Apply template
+            {ui.applyTemplate}
           </button>
         </div>
       </SettingsSection>
 
-      <SettingsSection title="Text settings" defaultOpen>
+      <SettingsSection title={ui.textSettings} defaultOpen>
         <label className="tool-panel block">
-          <span className="text-sm font-medium">Display text</span>
+          <span className="text-sm font-medium">{ui.displayText}</span>
           <textarea
             className="tool-input mt-2 min-h-[100px] font-sans"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Enter your message…"
+            placeholder={ui.placeholderMessage}
           />
         </label>
       </SettingsSection>
 
-      <SettingsSection title="Style settings">
+      <SettingsSection title={ui.styleSettings}>
         <label className="tool-panel block">
-          <span className="text-sm font-medium">Font size (0 = Auto): {fontSizeLabel(fontSizeScale)}</span>
+          <span className="text-sm font-medium">{ui.fontSize.replace("{value}", fontSizeLabel(fontSizeScale))}</span>
           <input
             type="range"
             min={0}
@@ -359,12 +361,10 @@ export function TextScrollerTool() {
             value={fontSizeScale}
             onChange={(e) => setFontSizeScale(Number(e.target.value))}
           />
-          <p className="mt-1 text-xs text-[var(--muted)]">
-            Auto fills the display height (ideal for fullscreen). Otherwise uses % of display height — not pixels.
-          </p>
+          <p className="mt-1 text-xs text-[var(--muted)]">{ui.fontSizeHint}</p>
         </label>
         <label className="tool-panel block">
-          <span className="text-sm font-medium">Font family</span>
+          <span className="text-sm font-medium">{ui.fontFamily}</span>
           <select className="tool-input mt-2" value={fontFamily} onChange={(e) => setFontFamily(e.target.value as ScrollerFontFamily)}>
             {FONT_FAMILIES.map((f) => (
               <option key={f.id} value={f.id}>
@@ -374,14 +374,14 @@ export function TextScrollerTool() {
           </select>
         </label>
         <label className="tool-panel block">
-          <span className="text-sm font-medium">Text color</span>
+          <span className="text-sm font-medium">{ui.textColor}</span>
           <div className="mt-2 flex items-center gap-2">
             <input type="color" className="h-10 w-14 cursor-pointer" value={textColor} onChange={(e) => setTextColor(e.target.value)} />
             <input type="text" className="tool-input flex-1 font-mono text-sm" value={textColor} onChange={(e) => setTextColor(e.target.value)} />
           </div>
         </label>
         <label className="tool-panel block">
-          <span className="text-sm font-medium">Font weight: {fontWeight}</span>
+          <span className="text-sm font-medium">{ui.fontWeight.replace("{n}", String(fontWeight))}</span>
           <input
             type="range"
             min={100}
@@ -399,7 +399,7 @@ export function TextScrollerTool() {
           </div>
         </label>
         <label className="tool-panel block">
-          <span className="text-sm font-medium">Letter spacing: {letterSpacing}px</span>
+          <span className="text-sm font-medium">{ui.letterSpacing.replace("{n}", String(letterSpacing))}</span>
           <input
             type="range"
             min={0}
@@ -411,9 +411,9 @@ export function TextScrollerTool() {
         </label>
       </SettingsSection>
 
-      <SettingsSection title="Animation settings">
+      <SettingsSection title={ui.animationSettings}>
         <label className="tool-panel block">
-          <span className="text-sm font-medium">Scroll speed: {speedPx} px/s</span>
+          <span className="text-sm font-medium">{ui.scrollSpeed.replace("{n}", String(speedPx))}</span>
           <input
             type="range"
             min={10}
@@ -423,13 +423,13 @@ export function TextScrollerTool() {
             onChange={(e) => setSpeedPx(Number(e.target.value))}
           />
           <div className="mt-1 flex justify-between text-xs text-[var(--muted)]">
-            <span>Slow</span>
-            <span>Medium</span>
-            <span>Fast</span>
+            <span>{ui.slow}</span>
+            <span>{ui.medium}</span>
+            <span>{ui.fast}</span>
           </div>
         </label>
         <label className="tool-panel block">
-          <span className="text-sm font-medium">Repeat spacing: {repeatSpacing}%</span>
+          <span className="text-sm font-medium">{ui.repeatSpacing.replace("{n}", String(repeatSpacing))}</span>
           <input
             type="range"
             min={0}
@@ -445,19 +445,19 @@ export function TextScrollerTool() {
           </div>
         </label>
         <label className="tool-panel block">
-          <span className="text-sm font-medium">Scroll direction</span>
+          <span className="text-sm font-medium">{ui.scrollDirection}</span>
           <select className="tool-input mt-2" value={direction} onChange={(e) => setDirection(e.target.value as ScrollDirection)}>
-            <option value="left">Horizontal ← (right to left)</option>
-            <option value="right">Horizontal → (left to right)</option>
-            <option value="up">Vertical ↑</option>
-            <option value="down">Vertical ↓</option>
+            <option value="left">{ui.dirLeft}</option>
+            <option value="right">{ui.dirRight}</option>
+            <option value="up">{ui.dirUp}</option>
+            <option value="down">{ui.dirDown}</option>
           </select>
         </label>
       </SettingsSection>
 
-      <SettingsSection title="Display settings">
+      <SettingsSection title={ui.displaySettings}>
         <label className="tool-panel block">
-          <span className="text-sm font-medium">Display height: {stageHeight}px</span>
+          <span className="text-sm font-medium">{ui.displayHeight.replace("{n}", String(stageHeight))}</span>
           <input
             type="range"
             min={60}
@@ -475,7 +475,7 @@ export function TextScrollerTool() {
           </div>
         </label>
         <label className="tool-panel block">
-          <span className="text-sm font-medium">Background color</span>
+          <span className="text-sm font-medium">{ui.backgroundColor}</span>
           <div className="mt-2 flex items-center gap-2">
             <input type="color" className="h-10 w-14 cursor-pointer" value={bgColor} onChange={(e) => setBgColor(e.target.value)} />
             <input type="text" className="tool-input flex-1 font-mono text-sm" value={bgColor} onChange={(e) => setBgColor(e.target.value)} />
@@ -483,9 +483,7 @@ export function TextScrollerTool() {
         </label>
       </SettingsSection>
 
-      <p className="text-xs text-[var(--muted)]">
-        Space = pause/resume in fullscreen or full-browser mode. Esc = exit. For events, concerts, and LED-style signage.
-      </p>
+      <p className="text-xs text-[var(--muted)]">{ui.footerHelp}</p>
 
       {browserDisplay && (
         <div
@@ -499,7 +497,7 @@ export function TextScrollerTool() {
             className="absolute right-4 top-4 rounded-lg bg-white/10 px-3 py-1 text-sm text-white"
             onClick={() => setBrowserDisplay(false)}
           >
-            Exit
+            {ui.exit}
           </button>
           <div
             ref={browserStageRef}

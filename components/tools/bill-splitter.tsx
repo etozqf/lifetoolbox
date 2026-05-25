@@ -2,8 +2,12 @@
 
 import { useMemo, useState } from "react";
 import { calcBillSplit } from "@/lib/formulas/tip";
+import { useToolUi } from "@/lib/i18n/use-tool-ui";
+import { useLocale } from "@/components/locale-provider";
 
 export function BillSplitterTool() {
+  const ui = useToolUi("bill-splitter");
+  const { locale } = useLocale();
   const [total, setTotal] = useState("120");
   const [people, setPeople] = useState("4");
   const [tipPercent, setTipPercent] = useState(18);
@@ -17,12 +21,12 @@ export function BillSplitterTool() {
   }, [total, people, tipPercent]);
 
   const fmt = (n: number) =>
-    n.toLocaleString("en-US", { style: "currency", currency: "USD" });
+    n.toLocaleString(locale === "zh" ? "zh-CN" : "en-US", { style: "currency", currency: "USD" });
 
   return (
     <div className="space-y-4">
       <label className="tool-panel block">
-        <span className="text-sm font-medium">Total bill ($)</span>
+        <span className="text-sm font-medium">{ui.totalBill}</span>
         <input
           type="number"
           min="0"
@@ -34,7 +38,7 @@ export function BillSplitterTool() {
       </label>
 
       <label className="tool-panel block">
-        <span className="text-sm font-medium">Number of people</span>
+        <span className="text-sm font-medium">{ui.people}</span>
         <input
           type="number"
           min="1"
@@ -45,7 +49,7 @@ export function BillSplitterTool() {
       </label>
 
       <label className="tool-panel block">
-        <span className="text-sm font-medium">Tip % (optional)</span>
+        <span className="text-sm font-medium">{ui.tipOptional}</span>
         <input
           type="number"
           min="0"
@@ -58,11 +62,11 @@ export function BillSplitterTool() {
       {result && (
         <div className="result-card space-y-3">
           <div className="flex justify-between">
-            <span>Grand total (with tip)</span>
+            <span>{ui.grandTotal}</span>
             <span className="result-value text-xl">{fmt(result.total)}</span>
           </div>
           <div className="flex justify-between border-t border-brand/20 pt-3">
-            <span className="font-medium">Each person pays</span>
+            <span className="font-medium">{ui.eachPerson}</span>
             <span className="result-value">{fmt(result.perPerson)}</span>
           </div>
         </div>

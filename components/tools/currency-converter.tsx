@@ -7,8 +7,34 @@ import {
   convertCurrency,
   formatMoney,
 } from "@/lib/formulas/finance";
+import { useToolUi } from "@/lib/i18n/use-tool-ui";
+import { useLocale } from "@/components/locale-provider";
+
+const CURRENCY_NAMES_ZH: Record<string, string> = {
+  USD: "美元",
+  EUR: "欧元",
+  GBP: "英镑",
+  JPY: "日元",
+  CNY: "人民币",
+  CAD: "加元",
+  AUD: "澳元",
+  CHF: "瑞士法郎",
+  HKD: "港币",
+  SGD: "新加坡元",
+  KRW: "韩元",
+  INR: "印度卢比",
+  MXN: "墨西哥比索",
+  BRL: "巴西雷亚尔",
+  NZD: "新西兰元",
+};
+
+function currencyName(code: string, enName: string, locale: string): string {
+  return locale === "zh" ? (CURRENCY_NAMES_ZH[code] ?? enName) : enName;
+}
 
 export function CurrencyConverterTool() {
+  const ui = useToolUi("currency-converter");
+  const { locale } = useLocale();
   const [amount, setAmount] = useState("100");
   const [from, setFrom] = useState("USD");
   const [to, setTo] = useState("EUR");
@@ -30,8 +56,8 @@ export function CurrencyConverterTool() {
         setFetchedAt(data.fetchedAt);
         setStale(data.stale);
       })
-      .catch((e) => {
-        if (!cancelled) setError(e instanceof Error ? e.message : "Failed to load rates");
+      .catch(() => {
+        if (!cancelled) setError(ui.failedRates);
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -39,7 +65,7 @@ export function CurrencyConverterTool() {
     return () => {
       cancelled = true;
     };
-  }, [base]);
+  }, [base, ui.failedRates]);
 
   const result = useMemo(() => {
     const n = parseFloat(amount) || 0;
@@ -58,42 +84,44 @@ export function CurrencyConverterTool() {
     const codes = new Set([...COMMON_CURRENCIES.map((c) => c.code), ...Object.keys(rates)]);
     return [...codes].sort().map((code) => {
       const known = COMMON_CURRENCIES.find((c) => c.code === code);
-      return { code, name: known?.name ?? code };
+      return { code, name: currencyName(code, known?.name ?? code, locale) };
     });
-  }, [rates]);
+  }, [rates, locale]);
 
   const displayResult = result !== null ? formatMoney(result, to) : "";
+  const numFmt = (n: number) =>
+    n.toLocaleString(locale === "zh" ? "zh-CN" : "en-US", { maximumFractionDigits: 4 });
 
   return (
     <div className="space-y-4">
       <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
-        Exchange rates are indicative only. Not for trading decisions.
+        {ui.disclaimer}
       </div>
 
       <label className="tool-panel block">
-        <span className="text-sm font-medium">Rates base currency</span>
+        <span className="text-sm font-medium">{ui.ratesBase}</span>
         <select className="tool-input mt-2" value={base} onChange={(e) => setBase(e.target.value)}>
           {COMMON_CURRENCIES.map((c) => (
             <option key={c.code} value={c.code}>
-              {c.code} — {c.name}
+              {c.code} — {currencyName(c.code, c.name, locale)}
             </option>
           ))}
         </select>
       </label>
 
-      {loading && <p className="text-sm text-[var(--muted)]">Loading exchange rates…</p>}
+      {loading && <p className="text-sm text-[var(--muted)]">{ui.loadingRates}</p>}
       {error && <p className="text-sm text-red-500">{error}</p>}
       {stale && !loading && (
         <p className="text-sm text-amber-600 dark:text-amber-400">
-          Rates may be outdated. Last update: {formatRatesTimestamp(fetchedAt)}
+          {ui.staleRates.replace("{timestamp}", formatRatesTimestamp(fetchedAt))}
         </p>
       )}
       {!stale && fetchedAt && !loading && (
-        <p className="text-xs text-[var(--muted)]">Rates updated: {formatRatesTimestamp(fetchedAt)}</p>
+        <p className="text-xs text-[var(--muted)]">{ui.ratesUpdated.replace("{timestamp}", formatRatesTimestamp(fetchedAt))}</p>
       )}
 
       <label className="tool-panel block">
-        <span className="text-sm font-medium">Amount</span>
+        <span className="text-sm font-medium">{ui.amount}</span>
         <input
           type="number"
           min="0"
@@ -106,7 +134,7 @@ export function CurrencyConverterTool() {
 
       <div className="grid gap-4 sm:grid-cols-[1fr_auto_1fr] sm:items-end">
         <label className="tool-panel block">
-          <span className="text-sm font-medium">From</span>
+          <span className="text-sm font-medium">{ui.from}</span>
           <select className="tool-input mt-2" value={from} onChange={(e) => setFrom(e.target.value)}>
             {currencyOptions.map((c) => (
               <option key={c.code} value={c.code}>
@@ -115,11 +143,11 @@ export function CurrencyConverterTool() {
             ))}
           </select>
         </label>
-        <button type="button" className="btn-secondary h-10 px-4" onClick={swap} aria-label="Swap currencies">
+        <button type="button" className="btn-secondary h-10 px-4" onClick={swap} aria-label={ui.swap}>
           ⇄
         </button>
         <label className="tool-panel block">
-          <span className="text-sm font-medium">To</span>
+          <span className="text-sm font-medium">{ui.to}</span>
           <select className="tool-input mt-2" value={to} onChange={(e) => setTo(e.target.value)}>
             {currencyOptions.map((c) => (
               <option key={c.code} value={c.code}>
@@ -133,20 +161,21 @@ export function CurrencyConverterTool() {
       {result !== null && !loading && (
         <div className="result-card">
           <p className="text-sm text-[var(--muted)]">
-            {amount || 0} {from} =
+            {ui.equals.replace("{amount}", amount || "0").replace("{from}", from)}
           </p>
           <p className="result-value text-2xl font-semibold">{displayResult}</p>
           {rates[from] && rates[to] && (
             <p className="mt-2 text-xs text-[var(--muted)]">
-              1 {from} = {(rates[to] / rates[from]).toFixed(4)} {to}
+              {ui.rateLine
+                .replace("{from}", from)
+                .replace("{rate}", numFmt(rates[to] / rates[from]))
+                .replace("{to}", to)}
             </p>
           )}
         </div>
       )}
 
-      <p className="text-xs text-[var(--muted)]">
-        Exchange rates are fetched via our server proxy; conversion math runs in your browser.
-      </p>
+      <p className="text-xs text-[var(--muted)]">{ui.footer}</p>
     </div>
   );
 }

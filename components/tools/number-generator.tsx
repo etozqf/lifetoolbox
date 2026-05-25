@@ -2,9 +2,21 @@
 
 import { useMemo, useState } from "react";
 import { generateRandomNumbers } from "@/lib/formulas/units";
+import { useToolUi } from "@/lib/i18n/use-tool-ui";
 import { copyToClipboard } from "@/lib/utils";
 
+function mapNumberGenError(
+  err: string,
+  ui: ReturnType<typeof useToolUi<"number-generator">>
+): string {
+  if (err === "Min must be ≤ max") return ui.errMinMax;
+  if (err === "Count must be at least 1") return ui.errCount;
+  if (err === "Cannot generate more unique integers than the range allows") return ui.errUnique;
+  return err;
+}
+
 export function NumberGeneratorTool() {
+  const ui = useToolUi("number-generator");
   const [min, setMin] = useState("1");
   const [max, setMax] = useState("100");
   const [count, setCount] = useState("1");
@@ -20,7 +32,7 @@ export function NumberGeneratorTool() {
       unique
     );
     if ("error" in out) {
-      setError(out.error);
+      setError(mapNumberGenError(out.error, ui));
       setResults([]);
     } else {
       setError("");
@@ -34,7 +46,7 @@ export function NumberGeneratorTool() {
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <label className="tool-panel block">
-          <span className="text-sm font-medium">Min</span>
+          <span className="text-sm font-medium">{ui.min}</span>
           <input
             type="number"
             className="tool-input mt-2"
@@ -43,7 +55,7 @@ export function NumberGeneratorTool() {
           />
         </label>
         <label className="tool-panel block">
-          <span className="text-sm font-medium">Max</span>
+          <span className="text-sm font-medium">{ui.max}</span>
           <input
             type="number"
             className="tool-input mt-2"
@@ -54,7 +66,7 @@ export function NumberGeneratorTool() {
       </div>
 
       <label className="tool-panel block">
-        <span className="text-sm font-medium">How many numbers?</span>
+        <span className="text-sm font-medium">{ui.count}</span>
         <input
           type="number"
           min="1"
@@ -66,11 +78,11 @@ export function NumberGeneratorTool() {
 
       <label className="flex items-center gap-2 text-sm">
         <input type="checkbox" checked={unique} onChange={(e) => setUnique(e.target.checked)} />
-        No duplicates (integers only)
+        {ui.unique}
       </label>
 
       <button type="button" className="btn-primary w-full" onClick={generate}>
-        Generate
+        {ui.generate}
       </button>
 
       {error && <p className="text-red-500">{error}</p>}
@@ -83,7 +95,7 @@ export function NumberGeneratorTool() {
             className="btn-secondary mt-4 w-full"
             onClick={() => copyToClipboard(preview)}
           >
-            Copy
+            {ui.copy}
           </button>
         </div>
       )}

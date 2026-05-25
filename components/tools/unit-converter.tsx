@@ -12,19 +12,25 @@ import {
   speedUnits,
   type UnitDef,
 } from "@/lib/formulas/units";
+import type { LifeToolSlug } from "@/lib/i18n/tool-ui/life";
+import { getUnitLabel } from "@/lib/i18n/unit-labels";
+import { useToolUi } from "@/lib/i18n/use-tool-ui";
+import { useLocale } from "@/components/locale-provider";
 
 type ConverterKind = "length" | "weight" | "area" | "volume" | "speed";
 
-const CONFIG: Record<ConverterKind, { title: string; units: UnitDef[] }> = {
-  length: { title: "Length", units: lengthUnits },
-  weight: { title: "Weight", units: weightUnits },
-  area: { title: "Area", units: areaUnits },
-  volume: { title: "Volume", units: volumeUnits },
-  speed: { title: "Speed", units: speedUnits },
+const CONFIG: Record<ConverterKind, { slug: LifeToolSlug; units: UnitDef[] }> = {
+  length: { slug: "length", units: lengthUnits },
+  weight: { slug: "weight", units: weightUnits },
+  area: { slug: "area", units: areaUnits },
+  volume: { slug: "volume", units: volumeUnits },
+  speed: { slug: "speed", units: speedUnits },
 };
 
 export function UnitConverterTool({ kind }: { kind: ConverterKind }) {
-  const { units } = CONFIG[kind];
+  const { slug, units } = CONFIG[kind];
+  const ui = useToolUi(slug);
+  const { locale } = useLocale();
   const [activeKey, setActiveKey] = useState(units[0].key);
   const [values, setValues] = useState<Record<string, string>>({});
 
@@ -51,7 +57,7 @@ export function UnitConverterTool({ kind }: { kind: ConverterKind }) {
             type="number"
             className="tool-input max-w-[140px] flex-shrink-0"
             value={values[u.key] ?? (displayValues ? formatNumber(displayValues[u.key], 4) : "")}
-            placeholder="0"
+            placeholder={ui.placeholderZero}
             onChange={(e) => handleChange(u.key, e.target.value)}
             onFocus={() => {
               if (displayValues && values[u.key] === undefined) {
@@ -60,7 +66,7 @@ export function UnitConverterTool({ kind }: { kind: ConverterKind }) {
               }
             }}
           />
-          <span className="text-sm">{u.label}</span>
+          <span className="text-sm">{getUnitLabel(u, locale)}</span>
         </label>
       ))}
     </div>
@@ -74,6 +80,7 @@ function convertFromEmpty(units: UnitDef[]): Record<string, number> {
 }
 
 export function TemperatureConverterTool() {
+  const ui = useToolUi("temperature");
   const [active, setActive] = useState<"c" | "f" | "k">("c");
   const [input, setInput] = useState("25");
 
@@ -84,9 +91,9 @@ export function TemperatureConverterTool() {
   }, [active, input]);
 
   const rows = [
-    { key: "c" as const, label: "Celsius (°C)" },
-    { key: "f" as const, label: "Fahrenheit (°F)" },
-    { key: "k" as const, label: "Kelvin (K)" },
+    { key: "c" as const, label: ui.celsius },
+    { key: "f" as const, label: ui.fahrenheit },
+    { key: "k" as const, label: ui.kelvin },
   ];
 
   return (
@@ -103,6 +110,7 @@ export function TemperatureConverterTool() {
                   ? formatNumber(result[row.key], 2)
                   : ""
             }
+            placeholder={ui.placeholderZero}
             onChange={(e) => {
               setActive(row.key);
               setInput(e.target.value);
