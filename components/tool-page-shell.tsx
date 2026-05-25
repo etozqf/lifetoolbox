@@ -1,3 +1,5 @@
+"use client";
+
 import { ReactNode } from "react";
 import { AdBanner } from "./ad-banner";
 import { AffiliateSlot } from "./affiliate-slot";
@@ -6,6 +8,7 @@ import { RelatedTools } from "./related-tools";
 import { JsonLd } from "./json-ld";
 import { siteConfig, webApplicationJsonLd } from "@/lib/seo";
 import type { DisclaimerType, ToolCluster } from "@/lib/tool-registry";
+import { useLocale } from "./locale-provider";
 
 export function ToolPageShell({
   title,
@@ -26,10 +29,10 @@ export function ToolPageShell({
   cluster?: ToolCluster;
   children: ReactNode;
 }) {
+  const { messages: t } = useLocale();
   const url = `${siteConfig.siteUrl}${path}`;
-  const note =
-    privacyNote ??
-    "All calculations run locally in your browser — nothing is uploaded.";
+  const note = privacyNote ?? t.toolPage.privacyNote;
+
   return (
     <div className="mx-auto max-w-content px-4 py-8">
       <JsonLd data={webApplicationJsonLd({ name: title, url, description })} />

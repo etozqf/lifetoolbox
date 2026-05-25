@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { getOgImageForCluster } from "@/lib/og-images";
+import type { Locale } from "@/lib/i18n/config";
+import { localizePath } from "@/lib/i18n/paths";
 import type { ToolCluster } from "@/lib/tool-registry";
 
 const rawSiteUrl =
@@ -25,10 +27,13 @@ export function buildToolMetadata(opts: {
   path: string;
   keywords: string[];
   cluster?: ToolCluster;
+  locale?: Locale;
 }): Metadata {
   const url = `${siteConfig.siteUrl}${opts.path}`;
   const ogImage = getOgImageForCluster(opts.cluster);
   const imageUrl = `${siteConfig.siteUrl}${ogImage}`;
+  const enPath = opts.locale === "zh" ? opts.path.replace(/^\/zh/, "") || "/" : opts.path;
+  const zhPath = opts.locale === "zh" ? opts.path : localizePath(opts.path, "zh");
   return {
     title: `${opts.title} | ${siteConfig.siteName}`,
     description: opts.description,
@@ -39,9 +44,16 @@ export function buildToolMetadata(opts: {
       url,
       type: "website",
       siteName: siteConfig.siteName,
+      locale: opts.locale === "zh" ? "zh_CN" : "en_US",
       images: [{ url: imageUrl, width: 1200, height: 630, alt: opts.title }],
     },
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      languages: {
+        en: `${siteConfig.siteUrl}${enPath}`,
+        zh: `${siteConfig.siteUrl}${zhPath}`,
+      },
+    },
     twitter: {
       card: "summary_large_image",
       title: opts.title,

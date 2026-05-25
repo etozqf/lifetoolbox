@@ -3,6 +3,7 @@ import { Inter, Nunito } from "next/font/google";
 import { ConsentProvider } from "@/components/consent-provider";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { LocaleProvider } from "@/components/locale-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { siteConfig } from "@/lib/seo";
 import "./globals.css";
@@ -47,9 +48,11 @@ export default function RootLayout({
       <body className={`${inter.variable} ${nunito.variable} flex min-h-screen flex-col font-sans`}>
         <ConsentProvider>
           <ThemeProvider>
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
+            <LocaleProvider>
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </LocaleProvider>
           </ThemeProvider>
         </ConsentProvider>
       </body>
