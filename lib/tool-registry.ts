@@ -325,8 +325,19 @@ export const tools: ToolEntry[] = [
     description: "Count characters and words for Twitter, Instagram, and more.",
     icon: "Type",
     keywords: ["character counter", "twitter character count"],
-    related: ["percentage-calculator"],
+    related: ["text-scroller", "percentage-calculator"],
     phase: 1,
+  },
+  {
+    slug: "text-scroller",
+    cluster: "social",
+    path: "/tools/social/text-scroller",
+    name: "Text Scroller",
+    description: "Create scrolling marquee text with custom colors, speed, and direction — free LED-style display.",
+    icon: "ScrollText",
+    keywords: ["text scroller", "marquee generator", "led text display", "scrolling text"],
+    related: ["character-counter"],
+    phase: 3,
   },
   // --- Phase 2: Kitchen ---
   {
